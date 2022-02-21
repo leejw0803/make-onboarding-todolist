@@ -5,9 +5,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import "./App.css";
-import { TodoType } from "./dto";
-import { deleteTodoList, fetchTodoList, updateTodoList } from "./util";
+import "./Home.css";
+import { TodoType } from "./Home.type";
+import { deleteTodoList, fetchTodoList, updateTodoList } from "../api/todo";
 
 function App() {
   const [todo, setTodo] = useState<TodoType>({

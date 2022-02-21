@@ -1,4 +1,4 @@
-import { RemoveTodoType, TodoType } from "./dto";
+import { RemoveTodoType, TodoType } from "../page/Home.type";
 
 export const fetchTodoList: () => Promise<TodoType[]> = () => {
   const keys = Object.keys(window.localStorage);
