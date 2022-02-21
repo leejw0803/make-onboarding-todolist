@@ -6,40 +6,32 @@ import React, {
   useState,
 } from "react";
 import "./App.css";
-
-type TodoType = {
-  value: string;
-  id: string;
-};
+import { TodoType } from "./dto";
+import { deleteTodoList, fetchTodoList, updateTodoList } from "./util";
 
 function App() {
   const [todo, setTodo] = useState<TodoType>({
     value: "",
-    id: "",
+    id: -1,
   });
   const [todoList, setTodoList] = useState<TodoType[]>([]);
   const [updatingTodo, setUpdatingTodo] = useState<TodoType>({
     value: "",
-    id: "",
+    id: -1,
   });
   const [updatingTodoIndex, setUpdatingTodoIndex] = useState<number>(-1);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   useEffect(() => {
-    const keys = Object.keys(window.localStorage);
-    const list = keys.map((key) => {
-      const [isTodo, id] = key.split("_");
-      const value = window.localStorage.getItem(key);
-      return isTodo === "todo" && { value, id };
-    });
-
-    const filteredList: TodoType[] = list.filter(
-      (item) => item !== false
-    ) as TodoType[];
-
-    filteredList.sort((todo1, todo2) => Number(todo1.id) - Number(todo2.id));
-
-    setTodoList(filteredList);
+    const fetchData = async () => {
+      const todoList = await fetchTodoList();
+      setTodoList(todoList);
+    };
+    try {
+      fetchData();
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   const onChange: ChangeEventHandler<HTMLInputElement> = (
@@ -54,31 +46,41 @@ function App() {
     setUpdatingTodo({ ...updatingTodo, value: e.target.value });
   };
 
-  const handleButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-    const id = Date.now().toString(36);
-    if (todo) {
-      setTodoList([...todoList, todo]);
-      setTodo({ ...todo, id });
-      window.localStorage.setItem(`todo_${id}`, todo.value);
+  const handleButtonClick: MouseEventHandler<HTMLButtonElement> = async () => {
+    const id = Date.now();
+    try {
+      await updateTodoList({ id, value: todo.value });
+    } catch (e) {
+      console.log(e);
     }
+    setTodoList([...todoList, todo]);
+    setTodo({ ...todo, id });
   };
 
   const handleUpdateCompleteClick: MouseEventHandler<
     HTMLButtonElement
-  > = () => {
+  > = async () => {
+    try {
+      await updateTodoList(updatingTodo);
+    } catch (e) {
+      console.log(e);
+    }
     todoList.splice(updatingTodoIndex, 1, updatingTodo);
     setTodoList([...todoList]);
-    window.localStorage.setItem(`todo_${updatingTodo.id}`, updatingTodo.value);
     setIsUpdating(false);
   };
 
-  const deleteElement: (item: TodoType, idx: number) => void = (
+  const deleteElement: (item: TodoType, idx: number) => void = async (
     item: TodoType,
     idx: number
   ) => {
+    try {
+      await deleteTodoList({ id: item.id });
+    } catch (e) {
+      console.log(e);
+    }
     todoList.splice(idx, 1);
     setTodoList([...todoList]);
-    window.localStorage.removeItem(`todo_${item.id}`);
   };
 
   const onUpdateButtonClick: (item: TodoType, idx: number) => void = (
@@ -117,8 +119,19 @@ function App() {
           {todoList.map((item: TodoType, idx: number) => (
             <div>
               {item.value} &nbsp;{" "}
-              <span onClick={() => deleteElement(item, idx)}>삭제</span> &nbsp;
-              <span onClick={() => onUpdateButtonClick(item, idx)}>수정</span>
+              <span
+                className="button-text"
+                onClick={() => deleteElement(item, idx)}
+              >
+                삭제
+              </span>{" "}
+              &nbsp;
+              <span
+                className="button-text"
+                onClick={() => onUpdateButtonClick(item, idx)}
+              >
+                수정
+              </span>
             </div>
           ))}
         </>
