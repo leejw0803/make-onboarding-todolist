@@ -2,27 +2,45 @@ import React, {
   ChangeEvent,
   ChangeEventHandler,
   MouseEventHandler,
+  useEffect,
   useState,
 } from "react";
 import "./App.css";
 
 type TodoType = {
   value: string;
-  index: number;
-  id?: string;
+  id: string;
 };
 
 function App() {
   const [todo, setTodo] = useState<TodoType>({
     value: "",
-    index: -1,
+    id: "",
   });
   const [todoList, setTodoList] = useState<TodoType[]>([]);
   const [updatingTodo, setUpdatingTodo] = useState<TodoType>({
     value: "",
-    index: -1,
+    id: "",
   });
+  const [updatingTodoIndex, setUpdatingTodoIndex] = useState<number>(-1);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+
+  useEffect(() => {
+    const keys = Object.keys(window.localStorage);
+    const list = keys.map((key) => {
+      const [isTodo, id] = key.split("_");
+      const value = window.localStorage.getItem(key);
+      return isTodo === "todo" && { value, id };
+    });
+
+    const filteredList: TodoType[] = list.filter(
+      (item) => item !== false
+    ) as TodoType[];
+
+    filteredList.sort((todo1, todo2) => Number(todo1.id) - Number(todo2.id));
+
+    setTodoList(filteredList);
+  }, []);
 
   const onChange: ChangeEventHandler<HTMLInputElement> = (
     e: ChangeEvent<HTMLInputElement>
@@ -37,19 +55,20 @@ function App() {
   };
 
   const handleButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+    const id = Date.now().toString(36);
     if (todo) {
       setTodoList([...todoList, todo]);
-      setTodo({ ...todo, id: new Date().toString() });
-      window.localStorage.setItem(`${todo.id}`, todo.value);
+      setTodo({ ...todo, id });
+      window.localStorage.setItem(`todo_${id}`, todo.value);
     }
   };
 
   const handleUpdateCompleteClick: MouseEventHandler<
     HTMLButtonElement
   > = () => {
-    todoList.splice(updatingTodo.index, 1, updatingTodo);
+    todoList.splice(updatingTodoIndex, 1, updatingTodo);
     setTodoList([...todoList]);
-    window.localStorage.setItem(`${updatingTodo.id}`, updatingTodo.value);
+    window.localStorage.setItem(`todo_${updatingTodo.id}`, updatingTodo.value);
     setIsUpdating(false);
   };
 
@@ -59,7 +78,7 @@ function App() {
   ) => {
     todoList.splice(idx, 1);
     setTodoList([...todoList]);
-    window.localStorage.removeItem(`${item.id}`);
+    window.localStorage.removeItem(`todo_${item.id}`);
   };
 
   const onUpdateButtonClick: (item: TodoType, idx: number) => void = (
@@ -70,8 +89,8 @@ function App() {
     setUpdatingTodo({
       value: item.value,
       id: item.id,
-      index: idx,
     });
+    setUpdatingTodoIndex(idx);
   };
 
   return (
