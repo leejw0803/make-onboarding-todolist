@@ -29,13 +29,14 @@ const ContentCardStyle = {
 
   ProfileImg: styled.img.attrs({
     alt: "profile image",
-    src: "images/img-logo.png",
+    src: "images/img-profile.JPG",
   })`
     width: 28px;
     height: 28px;
     border-radius: 14px;
     background-color: red;
     margin-right: 12px;
+    object-fit: cover;
   `,
 
   ProfileName: styled.h1`

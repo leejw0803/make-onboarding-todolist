@@ -23,7 +23,6 @@ const ModalStyle = {
     height: fit-content;
     background: white;
     border-radius: 8px;
-    padding: 24px 32px;
   `,
 
   ModalHeader: styled.div`
@@ -34,6 +33,7 @@ const ModalStyle = {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 12px 20px 10px;
   `,
 
   ProfileBox: styled.div`
@@ -44,13 +44,14 @@ const ModalStyle = {
 
   ProfileImg: styled.img.attrs({
     alt: "profile image",
-    src: "images/img-logo.png",
+    src: "images/img-profile.JPG",
   })`
     width: 28px;
     height: 28px;
     border-radius: 14px;
     background-color: red;
     margin-right: 12px;
+    object-fit: cover;
   `,
 
   ProfileName: styled.h1`
@@ -72,8 +73,15 @@ const ModalStyle = {
     cursor: pointer;
   `,
 
+  ContentWrapper: styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 32px;
+  `,
+
   ModalContent: styled.div`
-    padding: 28px 0 48px;
+    padding: 0 0 48px;
   `,
 
   ModalFooter: styled.div`

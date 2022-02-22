@@ -24,19 +24,21 @@ function ModalPresenter({
             <ModalStyle.CloseIcon onClick={onClose} />
           </ModalStyle.ModalHeader>
         )}
-        <ModalStyle.ModalContent>{children}</ModalStyle.ModalContent>
-        <ModalStyle.ModalFooter>
-          {!!handleCancelButtonClick && (
-            <ModalStyle.CancelButton onClick={handleCancelButtonClick}>
-              {cancelText}
-            </ModalStyle.CancelButton>
-          )}
-          {!!handleOKButtonClick && (
-            <ModalStyle.OKButton onClick={handleOKButtonClick}>
-              {okText}
-            </ModalStyle.OKButton>
-          )}
-        </ModalStyle.ModalFooter>
+        <ModalStyle.ContentWrapper>
+          <ModalStyle.ModalContent>{children}</ModalStyle.ModalContent>
+          <ModalStyle.ModalFooter>
+            {!!handleCancelButtonClick && (
+              <ModalStyle.CancelButton onClick={handleCancelButtonClick}>
+                {cancelText}
+              </ModalStyle.CancelButton>
+            )}
+            {!!handleOKButtonClick && (
+              <ModalStyle.OKButton onClick={handleOKButtonClick}>
+                {okText}
+              </ModalStyle.OKButton>
+            )}
+          </ModalStyle.ModalFooter>
+        </ModalStyle.ContentWrapper>
       </ModalStyle.Wrapper>
     </ModalStyle.Dimmer>
   );

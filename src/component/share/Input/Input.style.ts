@@ -12,6 +12,7 @@ const InputStyle = {
     display: flex;
     flex-direction: row;
     height: 102px;
+    width: 100%;
   `,
 };
 

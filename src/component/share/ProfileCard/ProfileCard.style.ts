@@ -11,7 +11,10 @@ const ProfileCardStyle = {
     padding: 6px 16px;
   `,
 
-  ProfileImage: styled.img.attrs({ alt: "profile image" })`
+  ProfileImage: styled.img.attrs({
+    alt: "profile image",
+    src: "images/img-profile.JPG",
+  })`
     background: red;
     width: 52px;
     height: 52px;

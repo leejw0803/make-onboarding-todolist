@@ -18,6 +18,7 @@ function MenuPresenter({
               onClick={(e) => {
                 e.stopPropagation();
                 handleOptionClick(data);
+                handleSelectClick(e);
               }}
               value={data}
             >
